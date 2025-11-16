@@ -1,13 +1,15 @@
 from openai import OpenAI
-from RealtimeSTT import AudioToTextRecorder
 import json
 
+from speech import SR
 
 with open('config.json', "r") as f:
     config = json.load(f)
 
 class AI:
-    instructions="you're a kitchen assistant ready to bring up instructions any time."
+    instructions="""you're a kitchen assistant ready to bring up instructions any time.
+    The user is talking to you through a device equiped with a microphone, camera and speakers whith which you communicate with him.
+    If the user requests to change the volume PREFIX the string with [volume] like this '[volume +5%]content of your response' (the 5% can be replaced with -5% or any integer)"""
 
     def __init__(self, openai_key: str):
         self.client = OpenAI(api_key=openai_key)
@@ -19,23 +21,15 @@ class AI:
             input=inpt
         ).output_text
 
-#voice recognition!!
-class SR:
-    #process_text is a function!!!
-    def __init__(self, process_text):
-        self.recorder = AudioToTextRecorder()
-
-        input("start?")
-        self.recorder.start()
-        input("")
-        self.recorder.text(process_text)
-
-def process_text(text):
+def handle_text(text, args: (AI,)):
+    ai=args[0]
     print(f"{type(text)}: {text}")
+    print(f"ai: {ai.ask(text)}")
 
 def main():
-    #ai=AI(config["openai_key"])
-    SR(process_text)
+    ai=AI(config["openai_key"])
+    sr = SR()
+    sr.listen(handle_text, (ai,))
 
 if __name__ == "__main__":
     main()
