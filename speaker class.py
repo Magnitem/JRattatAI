@@ -12,6 +12,6 @@ class speaker:
         engine.setProperty('voice', voices[1].id) #voices 0 - java voice, 1 - Italian acent voice, 2 - just a woman
         engine.say(text)
         engine.runAndWait()
-speaker.speak("Hello, I'am RattatAI, for shourt RT")
+speaker.speak("Hello, I'am RattatAI")
 
 speaker.speak("Today we are going to cook the pizza")
